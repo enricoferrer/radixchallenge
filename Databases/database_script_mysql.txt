@@ -1,0 +1,17 @@
+create database challenge;
+
+use challenge;
+
+create table if not exists user(
+id int primary key auto_increment,
+name varchar(45),
+email varchar(45) not null,
+password varchar(45),
+UNIQUE(email)
+);
+
+create table if not exists equipment(
+equipmentId varchar(8) primary key,
+timestamp datetime,
+value double
+);
