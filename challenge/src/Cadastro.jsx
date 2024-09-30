@@ -1,9 +1,12 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 
-const Login = () => {
+const Cadastro = () => {
     const [email, setEmail] = useState('');
+    const [name, setName] = useState('');
+    const [lastName, setLastName] = useState('');
     const [password, setPassword] = useState('');
+    const [confirmPassword, setConfirmPassword] = useState('');
     const [error, setError] = useState('');
   
     const handleSubmit = (e) => {
@@ -19,8 +22,30 @@ const Login = () => {
   
     return (
       <div style={styles.container}>
-        <h2 style={styles.login}>Login</h2>
+        <h2 style={styles.signUp}>Sign Up</h2>
         <form onSubmit={handleSubmit} style={styles.form}>
+        <div style={styles.inputGroup}>
+            <label htmlFor="name">First Name:</label>
+            <input
+              type="name"
+              id="name"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              required
+              style={styles.input}
+            />
+          </div>
+          <div style={styles.inputGroup}>
+            <label htmlFor="name">Last Name:</label>
+            <input
+              type="lastName"
+              id="lastName"
+              value={lastName}
+              onChange={(e) => setLastName(e.target.value)}
+              required
+              style={styles.input}
+            />
+          </div>
           <div style={styles.inputGroup}>
             <label htmlFor="email">Email:</label>
             <input
@@ -43,10 +68,21 @@ const Login = () => {
               style={styles.input}
             />
           </div>
+          <div style={styles.inputGroup}>
+            <label htmlFor="confirmPassword">Confirm your Password:</label>
+            <input
+              type="confirmPassword"
+              id="confirmPassword"
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+              required
+              style={styles.input}
+            />
+          </div>
           {error && <p style={styles.error}>{error}</p>}
-          <button type="submit" style={styles.button}>Enter</button>
+          <button type="submit" style={styles.button} >Sign up</button>
         </form>
-        <Link to={"/Cadastro"}><p>Sign Up</p></Link>
+        <Link to={"/"}><p>Sign In</p></Link>
       </div>
     );
   };
@@ -54,14 +90,14 @@ const Login = () => {
   const styles = {
     container: {
       maxWidth: '250px',
-      margin: '300px auto',
+      margin: '180px auto',
       padding: '12px',
       border: '1px solid #ccc',
       borderRadius: '5px',
       boxShadow: '0 2px 10px rgba(0,0,0,0.2)',
     },
-    login:{
-        marginLeft: "90px",
+    signUp:{
+        marginLeft: "80px",
     },
     form: {
       display: 'flex',
@@ -94,4 +130,4 @@ const Login = () => {
   };
   
 
-export default Login;
+export default Cadastro;
