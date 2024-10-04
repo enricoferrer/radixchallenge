@@ -8,11 +8,15 @@
     "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "start": "nodemon index.js"
+    "start": "nodemon App.jsx"
   },
   "dependencies": {
     "apollo-server": "^3.13.0",
+    "apollo-server-express": "^3.13.0",
+    "body-parser": "^1.20.3",
+    "express": "^4.21.0",
     "graphql": "^16.9.0",
+    "luxon": "^3.5.0",
     "mongodb": "^6.9.0",
     "mongoose": "^8.7.0",
     "nodemon": "^3.1.7",

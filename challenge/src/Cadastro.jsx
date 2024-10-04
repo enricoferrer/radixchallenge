@@ -1,22 +1,90 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 const Cadastro = () => {
     const [email, setEmail] = useState('');
     const [name, setName] = useState('');
-    const [lastName, setLastName] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
     const [error, setError] = useState('');
   
-    const handleSubmit = (e) => {
+    const navigate = useNavigate();
+
+    const handleSubmit = async (e) => {
       e.preventDefault();
-      // Aqui você pode adicionar a lógica de autenticação
-      if (email === '' || password === '') {
+      
+      if (email.trim().length === 0 || password.trim().length === 0 || name.trim().length === 0 || confirmPassword.trim().length === 0) {
         setError('Por favor, preencha todos os campos.');
+        return;
+      } 
+
+      if(password != confirmPassword){
+        setError('Senhas diferentes nos campos senha e confirmar senha')
+        return;
+      }
+      
+      const verificarEmail = async () =>{
+        const requestBody = {
+          query: `
+            query{
+            getEmailDuplicate(email: "${email}")
+            }
+          `
+        }
+
+        const resposta = await fetch('http://localhost:9000/graphql',{
+          method: 'POST',
+          body: JSON.stringify(requestBody),
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        })
+
+        const dado = await resposta.json();
+
+        return dado.data.getEmailDuplicate;
+
+      }
+
+      const emailDuplicado = verificarEmail.value
+
+      if(emailDuplicado){
+        setError('Email já cadastrado!');
+        return;
+      }
+
+      setError('');
+      console.log('Cadastrado com:', { name ,email });
+
+      const requestBody = {
+        query: `
+          mutation{
+            createUser(userInput: {name: "${name}", email: "${email}", password: "${password}"}){
+              email
+              name
+              password
+              createdAt
+            }
+          }`
+      };
+
+      const cadastrar = await fetch('http://localhost:9000/graphql',{
+        method: 'POST',
+        body: JSON.stringify(requestBody),
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
+
+      console.log(cadastrar.ok)
+      if (cadastrar.ok) {
+        alert("Cadastro realizado com sucesso!")
+        setTimeout(() => {
+          navigate('/');
+        }, 500);
       } else {
-        setError('');
-        console.log('Logando com:', { email, password });
+        alert("oi")
       }
     };
   
@@ -31,17 +99,6 @@ const Cadastro = () => {
               id="name"
               value={name}
               onChange={(e) => setName(e.target.value)}
-              required
-              style={styles.input}
-            />
-          </div>
-          <div style={styles.inputGroup}>
-            <label htmlFor="name">Last Name:</label>
-            <input
-              type="lastName"
-              id="lastName"
-              value={lastName}
-              onChange={(e) => setLastName(e.target.value)}
               required
               style={styles.input}
             />
@@ -71,7 +128,7 @@ const Cadastro = () => {
           <div style={styles.inputGroup}>
             <label htmlFor="confirmPassword">Confirm your Password:</label>
             <input
-              type="confirmPassword"
+              type="password"
               id="confirmPassword"
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}

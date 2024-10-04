@@ -1,11 +1,16 @@
 import { gql } from "apollo-server";
 
 const typeDefs = gql`
+
 type User {
     name: String!
     email: String!
     password: String!
     createdAt: String!
+}
+
+type AuthPayload {
+    user: User!
 }
 
 input UserInput {
@@ -18,9 +23,24 @@ input EditUserInput {
     password: String
 }
 
+type Equipment {
+    equipmentId: String!
+    timestamp: String!
+    value: Float!
+}
+
+input EquipmentInput {
+    equipmentId: String
+    timestamp: String
+    value: Float
+}
+
 type Query {
-    user(ID: ID!): User!
+    userLogin(email: String!, password: String!): AuthPayload!
+    getEmailDuplicate(email:String): Boolean
     getUser(amount: Int): [User]
+    equipment(equipmentId: String): [Equipment!]
+    getEquipment(amout: Int): [Equipment]
 }
 
 type Mutation {

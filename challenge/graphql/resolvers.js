@@ -1,19 +1,40 @@
 import User from "../models/User.js";
+import { DateTime } from 'luxon';
 
+const dataAtual = DateTime.now().setZone('America/Sao_Paulo');
 
 const resolvers = {
     Query: {
-        async user(_, {ID}){
-            return await User.findByID(ID)
-        }
+        async userLogin(_, {email, password}){
+            const user = await User.findOne({email});
+            if (user == false){
+                throw new Error('Não há nenhum usuario com esse email!');
+            }
+
+            const senha = await user.comparePassword(password);
+            if(senha == false){
+                throw new Error('Senha Incorreta')
+            }
+        },
+        async getEmailDuplicate(_, {email}){
+            const duplicado = await User.findOne({email});
+            
+            if(duplicado) {
+                return true;
+            } else {
+                return false;
+            }
+            
+        } 
     },
     Mutation: {
         async createUser(_, {userInput: {name, email, password}}){
+            
             const createdUser = new User({
                 name: name,
                 email: email,
                 password: password,
-                createdAt: new Date().toISOString()
+                createdAt: dataAtual.toString()
             });
 
             const res = await createdUser.save();  // MongoDB salva aqui

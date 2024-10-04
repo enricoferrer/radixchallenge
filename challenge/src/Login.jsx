@@ -8,13 +8,33 @@ const Login = () => {
   
     const handleSubmit = (e) => {
       e.preventDefault();
-      // Aqui você pode adicionar a lógica de autenticação
-      if (email === '' || password === '') {
+      
+      if (email.trim().length === 0 || password.trim().length === 0) {
         setError('Por favor, preencha todos os campos.');
-      } else {
-        setError('');
-        console.log('Logando com:', { email, password });
-      }
+        return;
+      } 
+      
+      setError('');
+      console.log('Logando com:', { email, password });
+
+      const requestBody = {
+        query: `
+          mutation{
+            createUser(userInput: {email: "${email}", password: "${password}"}){
+              _id,
+              email
+            }
+          }`
+      };
+
+      fetch('http://localhost:9000/graphql',{
+        method: 'POST',
+        body: JSON.stringify(requestBody),
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
+
     };
   
     return (
