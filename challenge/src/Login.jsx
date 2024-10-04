@@ -1,12 +1,15 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 const Login = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
   
-    const handleSubmit = (e) => {
+    const navigate = useNavigate();
+
+    const handleSubmit = async (e) => {
       e.preventDefault();
       
       if (email.trim().length === 0 || password.trim().length === 0) {
@@ -15,25 +18,46 @@ const Login = () => {
       } 
       
       setError('');
-      console.log('Logando com:', { email, password });
+      
 
       const requestBody = {
         query: `
-          mutation{
-            createUser(userInput: {email: "${email}", password: "${password}"}){
-              _id,
+          query{
+            userLogin(email: "${email}", password: "${password}"){
+              name
               email
+              createdAt
             }
           }`
       };
 
-      fetch('http://localhost:9000/graphql',{
-        method: 'POST',
-        body: JSON.stringify(requestBody),
-        headers: {
-          'Content-Type': 'application/json'
+      try {
+        const resposta = await fetch('http://localhost:9000/graphql', {
+            method: 'POST',
+            body: JSON.stringify(requestBody),
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+
+        const dado = await resposta.json(); // Processa a resposta como JSON
+
+        if (!resposta.ok || dado.errors) {
+            
+            setError(dado.errors ? dado.errors[0]?.message : 'Erro ao fazer login');
+            return;
         }
-      })
+
+        
+        console.log('Login bem-sucedido:', dado.data.userLogin);
+        alert("Login realizado com sucesso!")
+        setTimeout(() => {
+          navigate('/Dashboard');
+        }, 500);
+    } catch (error) {
+        console.error('Erro na requisição:', error);
+        setError('Erro ao fazer login');
+    }
 
     };
   

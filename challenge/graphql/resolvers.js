@@ -1,20 +1,28 @@
 import User from "../models/User.js";
 import { DateTime } from 'luxon';
 
+
 const dataAtual = DateTime.now().setZone('America/Sao_Paulo');
 
 const resolvers = {
     Query: {
         async userLogin(_, {email, password}){
             const user = await User.findOne({email});
-            if (user == false){
+            if (!user){
                 throw new Error('Não há nenhum usuario com esse email!');
             }
 
-            const senha = await user.comparePassword(password);
-            if(senha == false){
-                throw new Error('Senha Incorreta')
+            const senhaCorreta = (user.password == password);
+            if (!senhaCorreta) {
+                throw new Error('Senha Incorreta');
             }
+
+            return {
+                name: user.name,
+                email: user.email,
+                createdAt: user.createdAt
+            }
+
         },
         async getEmailDuplicate(_, {email}){
             const duplicado = await User.findOne({email});

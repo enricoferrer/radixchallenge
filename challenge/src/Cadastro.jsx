@@ -77,14 +77,11 @@ const Cadastro = () => {
         }
       })
 
-      console.log(cadastrar.ok)
       if (cadastrar.ok) {
         alert("Cadastro realizado com sucesso!")
         setTimeout(() => {
           navigate('/');
         }, 500);
-      } else {
-        alert("oi")
       }
     };
   

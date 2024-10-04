@@ -9,10 +9,6 @@ type User {
     createdAt: String!
 }
 
-type AuthPayload {
-    user: User!
-}
-
 input UserInput {
     name: String
     email: String
@@ -36,7 +32,7 @@ input EquipmentInput {
 }
 
 type Query {
-    userLogin(email: String!, password: String!): AuthPayload!
+    userLogin(email: String!, password: String!): User!
     getEmailDuplicate(email:String): Boolean
     getUser(amount: Int): [User]
     equipment(equipmentId: String): [Equipment!]
