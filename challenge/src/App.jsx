@@ -1,7 +1,8 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Login from "./Login";
 import Cadastro from "./Cadastro";
-
+import Dashboard from "./Dashboard";
+import Sidebar from "./Sidebar";
 
 function App(){
   return (
@@ -9,7 +10,14 @@ function App(){
     <Routes>
       <Route path='/' element={<Login/>}/>
       <Route path='/Cadastro' element={<Cadastro/>}/>
-      <Route path='/Dashboard' element={<h1>Dashboard</h1>}/>
+
+      <Route path='/Dashboard' element={
+          <div style={{ display: 'flex' }}>
+            <Sidebar />
+            <Dashboard />
+          </div>
+        }/>
+
       <Route path='*' element={<h1>Not Found</h1>}/>
     </Routes>
    </BrowserRouter>
