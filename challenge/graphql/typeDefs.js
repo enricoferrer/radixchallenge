@@ -20,9 +20,9 @@ input EditUserInput {
 }
 
 type Equipment {
-    equipmentId: String!
-    timestamp: String!
-    value: Float!
+    equipmentId: String
+    timestamp: String
+    value: Float
 }
 
 input EquipmentInput {
@@ -36,13 +36,13 @@ type Query {
     getEmailDuplicate(email:String): Boolean
     getUser(amount: Int): [User]
     equipment(equipmentId: String): [Equipment!]
-    getEquipment(amout: Int): [Equipment]
 }
 
 type Mutation {
     createUser(userInput: UserInput): User!
     deleteUser(ID: ID!): Boolean
     editUser(email: String!, editUserInput: EditUserInput): Boolean
+    createEquipment(input: [EquipmentInput]!): [Equipment]!
 }
 `
 

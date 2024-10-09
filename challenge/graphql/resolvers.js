@@ -1,5 +1,6 @@
 import User from "../models/User.js";
 import { DateTime } from 'luxon';
+import Equipment from "../models/Equipment.js"
 
 
 const dataAtual = DateTime.now().setZone('America/Sao_Paulo');
@@ -33,7 +34,15 @@ const resolvers = {
                 return false;
             }
             
-        } 
+        },
+        async equipment(_, {equipmentId}){
+            const [equipamentosLista] = await Equipment.find({equipmentId});
+            return {
+                equuipmentId: equipamentosLista.equipmentId,
+                timestamp: equipamentosLista.timestamp,
+                value: equipamentosLista.value
+            }
+        }
     },
     Mutation: {
         async createUser(_, {userInput: {name, email, password}}){
@@ -59,6 +68,15 @@ const resolvers = {
         async editUser(_, {email, editUserInput: {password}}) {
             const foiEditado = (await User.updateOne({email: email}, {password: password})).modifiedCount;
             return foiEditado // se 1 = foi, se 0 = não foi
+        },
+        async createEquipment(_, {input}){
+            const novosEquipment = await Equipment.insertMany(input);
+            console.log(novosEquipment)
+            return novosEquipment.map(equipment => ({
+                equipmentId: equipment.equipmentId,
+                timestamp: equipment.timestamp,
+                value: equipment.value
+              }));
         }
     }
 }
