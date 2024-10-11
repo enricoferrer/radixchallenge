@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Papa from "papaparse";
+import "./Dashboard.css"
 
 const Dashboard = () => {
   const [dadosJSON, setDadosJSON] = useState([]); 
@@ -112,10 +113,15 @@ const Dashboard = () => {
   }
 
   return (
-    <div>
-      <input type="file" accept=".csv" onChange={lerArquivoCSV} />
-      <button onClick={enviarDadosParaGraphQL}>Enviar Dados</button>
-      <button onClick={enviarCSVParaGraphQL}>Enviar CSV</button>
+    <div className="ContainerTudo">
+      <div className="Container">
+
+      </div>
+      <div className="Botoes">
+        <input type="file" accept=".csv" onChange={lerArquivoCSV} />
+        <button onClick={enviarDadosParaGraphQL}>Enviar Dados</button>
+        <button onClick={enviarCSVParaGraphQL}>Enviar CSV</button>
+      </div>
     </div>
   );
 };
