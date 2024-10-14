@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from "react";
 import Papa from "papaparse";
 import "./Dashboard.css"
+import { Line } from 'react-chartjs-2';
+import 'chart.js/auto';
 
 const Dashboard = () => {
   const [dadosJSON, setDadosJSON] = useState([]); 
   const [dadosCSV, setDadosCSV] = useState([])
-
+  const [chartData, setChartData] = useState({});
   
   const lerArquivoCSV = (event) => {
     const arquivo = event.target.files[0];
@@ -113,7 +115,7 @@ const Dashboard = () => {
   }
 
   async function gerarGrafico24hrs() {
-    const dataHora = "2023-02-14T01:30:00.000-05:00"
+    const dataHora = "2023-02-14T01:30:00.000-05:00";
     const requestBody = {
       query: `
       query($filter: timestampInput) {
@@ -128,7 +130,8 @@ const Dashboard = () => {
           timestamp_gte: dataHora
         }
       }
-    }
+    };
+
     console.log(JSON.stringify(requestBody, null, 2));
     try {
       const resposta = await fetch("http://localhost:9000/graphql", {
@@ -141,19 +144,37 @@ const Dashboard = () => {
   
       if (resposta.ok) {
         const resultado = await resposta.json();
-        console.log(resultado);
+        const dados = resultado.data.getEquipment24h;
+
+        // Organizando dados para o gráfico
+        const labels = dados.map(item => new Date(item.timestamp).toLocaleString());
+        const valores = dados.map(item => item.value);
+
+        // Configuração dos dados do gráfico
+        setChartData({
+          labels,
+          datasets: [
+            {
+              label: 'Valores do Equipamento nas últimas 24 horas',
+              data: valores,
+              borderColor: 'rgba(75,192,192,1)',
+              fill: false,
+              tension: 0.1,
+            }
+          ]
+        });
       } else {
         alert("Erro ao buscar dados.");
       }
     } catch (error) {
       console.error("Erro na requisição:", error);
     }
-}
+  }
 
   return (
     <div className="ContainerTudo">
       <div className="Container">
-
+      {chartData.labels && <Line data={chartData} />}
       </div>
       <div className="Botoes">
         <input type="file" accept=".csv" onChange={lerArquivoCSV} />
