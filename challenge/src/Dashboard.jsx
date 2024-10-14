@@ -4,11 +4,14 @@ import "./Dashboard.css"
 import { Line } from 'react-chartjs-2';
 import 'chart.js/auto';
 import 'chartjs-adapter-date-fns';
+import Sidebar from './Sidebar.jsx'
+import { useNavigate } from 'react-router-dom';
 
 const Dashboard = () => {
   const [dadosJSON, setDadosJSON] = useState([]); 
   const [dadosCSV, setDadosCSV] = useState([])
   const [chartData, setChartData] = useState({});
+  const navigate = useNavigate();
   
   const lerArquivoCSV = (event) => {
     const arquivo = event.target.files[0];
@@ -186,8 +189,28 @@ const Dashboard = () => {
     }
   }
 
+  function voltar() {
+    setTimeout(() => {
+      navigate('/');
+    }, 500);
+  }
+
+  const handleButtonClick = (tipo) => {
+    if (tipo === "24horas") {
+      gerarGrafico24hrs();
+    } else if (tipo === "48horas") {
+      gerarGrafico48horas();
+    } else if(tipo === "1semana"){
+      gerarGrafico1semana();
+    } else if(tipo === "1mes"){
+      gerarGrafico1mes();
+    } else {
+      voltar();
+    }
+  };
   return (
     <div className="ContainerTudo">
+      <Sidebar onButtonClick={handleButtonClick}/>
       <div className="Container">
       {chartData.datasets && <Line data={{ datasets: chartData.datasets }} options={{ scales: { x: { type: 'time' } } }} />}
       </div>
@@ -195,7 +218,6 @@ const Dashboard = () => {
         <input type="file" accept=".csv" onChange={lerArquivoCSV} />
         <button onClick={enviarDadosParaGraphQL}>Enviar Dados</button>
         <button onClick={enviarCSVParaGraphQL}>Enviar CSV</button>
-        <button onClick={gerarGrafico24hrs}></button>
       </div>
     </div>
   );

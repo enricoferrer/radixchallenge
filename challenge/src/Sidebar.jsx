@@ -1,9 +1,9 @@
 import React from 'react';
 import './Sidebar.css'; // Importar estilos
-import { useNavigate } from 'react-router-dom';
+import "./Dashboard/"
 
-const Sidebar = ({onSelect }) => {
-  const navigate = useNavigate();
+const Sidebar = ({onButtonClick }) => {
+  
   
   function voltar() {
     setTimeout(() => {
@@ -16,19 +16,19 @@ const Sidebar = ({onSelect }) => {
       <h2>Menu</h2>
       <ul>
         <li>
-          <button onClick={() => onSelect('24horas')}>24 Horas</button>
+          <button onClick={() => onButtonClick("24horas")}>24 Horas</button>
         </li>
         <li>
-          <button onClick={() => onSelect('48horas')}>48 Horas</button>
+          <button onClick={() => onButtonClick("48horas")}>48 Horas</button>
         </li>
         <li>
-          <button onClick={() => onSelect('1semana')}>1 Semana</button>
+          <button onClick={() => onButtonClick("1semana")}>1 Semana</button>
         </li>
         <li>
-          <button onClick={() => onSelect('1mes')}>1 Mês</button>
+          <button onClick={() => onButtonClick("1mes")}>1 Mês</button>
         </li>
       </ul>
-      <button className="logout-button" onClick={voltar}>
+      <button className="logout-button" onClick={() => onButtonClick("voltar")}>
         Deslogar
       </button>
     </div>

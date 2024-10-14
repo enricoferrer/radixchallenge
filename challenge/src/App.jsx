@@ -13,7 +13,6 @@ function App(){
 
       <Route path='/Dashboard' element={
           <div style={{ display: 'flex' }}>
-            <Sidebar />
             <Dashboard />
           </div>
         }/>
