@@ -42,6 +42,17 @@ const resolvers = {
                 timestamp: equipamentosLista.timestamp,
                 value: equipamentosLista.value
             }
+        },
+        getEquipment24h: async (_, { filter }) => {
+            const query = {};
+            
+            
+            if (filter && filter.timestamp_gte) {
+                query.timestamp = { $gte: new Date(filter.timestamp_gte).toISOString() };
+            }
+      
+            
+            return await Equipment.find(query).exec();
         }
     },
     Mutation: {

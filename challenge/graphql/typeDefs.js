@@ -31,11 +31,16 @@ input EquipmentInput {
     value: Float
 }
 
+input timestampInput {
+    timestamp_gte: String
+}
+
 type Query {
     userLogin(email: String!, password: String!): User!
     getEmailDuplicate(email:String): Boolean
     getUser(amount: Int): [User]
     equipment(equipmentId: String): [Equipment!]
+    getEquipment24h(filter: timestampInput): [Equipment!]
 }
 
 type Mutation {

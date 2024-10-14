@@ -112,6 +112,44 @@ const Dashboard = () => {
     }
   }
 
+  async function gerarGrafico24hrs() {
+    const dataHora = "2023-02-14T01:30:00.000-05:00"
+    const requestBody = {
+      query: `
+      query($filter: timestampInput) {
+        getEquipment24h(filter: $filter) {
+          equipmentId
+          timestamp
+          value
+        }
+      }`,
+      variables: {
+        filter: {
+          timestamp_gte: dataHora
+        }
+      }
+    }
+    console.log(JSON.stringify(requestBody, null, 2));
+    try {
+      const resposta = await fetch("http://localhost:9000/graphql", {
+        method: "POST",
+        body: JSON.stringify(requestBody),
+        headers: {
+          "Content-Type": "application/json",
+        }
+      });
+  
+      if (resposta.ok) {
+        const resultado = await resposta.json();
+        console.log(resultado);
+      } else {
+        alert("Erro ao buscar dados.");
+      }
+    } catch (error) {
+      console.error("Erro na requisição:", error);
+    }
+}
+
   return (
     <div className="ContainerTudo">
       <div className="Container">
@@ -121,6 +159,7 @@ const Dashboard = () => {
         <input type="file" accept=".csv" onChange={lerArquivoCSV} />
         <button onClick={enviarDadosParaGraphQL}>Enviar Dados</button>
         <button onClick={enviarCSVParaGraphQL}>Enviar CSV</button>
+        <button onClick={gerarGrafico24hrs}></button>
       </div>
     </div>
   );
