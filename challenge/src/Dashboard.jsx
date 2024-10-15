@@ -12,7 +12,8 @@ const Dashboard = () => {
   const [dadosCSV, setDadosCSV] = useState([])
   const [chartData, setChartData] = useState({});
   const navigate = useNavigate();
-  
+  let dataHora;
+
   const lerArquivoCSV = (event) => {
     const arquivo = event.target.files[0];
     if (arquivo) {
@@ -118,8 +119,7 @@ const Dashboard = () => {
     }
   }
 
-  async function gerarGrafico24hrs() {
-    const dataHora = "2023-02-14T01:30:00.000-05:00";
+  async function gerarGraficos() {
     const requestBody = {
       query: `
         query($filter: timestampInput) {
@@ -197,13 +197,17 @@ const Dashboard = () => {
 
   const handleButtonClick = (tipo) => {
     if (tipo === "24horas") {
-      gerarGrafico24hrs();
+      dataHora = "2023-02-14T01:30:00.000-05:00";
+      gerarGraficos();
     } else if (tipo === "48horas") {
-      gerarGrafico48horas();
+      dataHora = "2023-02-13T01:30:00.000-05:00"
+      gerarGraficos();
     } else if(tipo === "1semana"){
-      gerarGrafico1semana();
+      dataHora = "2023-02-08T01:30:00.000-05:00"
+      gerarGraficos();
     } else if(tipo === "1mes"){
-      gerarGrafico1mes();
+      dataHora = "2023-01-15T01:30:00.000-05:00"
+      gerarGraficos();
     } else {
       voltar();
     }
