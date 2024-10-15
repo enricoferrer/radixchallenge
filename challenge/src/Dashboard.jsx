@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Papa from "papaparse";
 import "./Dashboard.css"
-import { Line } from 'react-chartjs-2';
+import { Bar } from 'react-chartjs-2';
 import 'chart.js/auto';
 import 'chartjs-adapter-date-fns';
 import Sidebar from './Sidebar.jsx'
@@ -10,7 +10,18 @@ import { useNavigate } from 'react-router-dom';
 const Dashboard = () => {
   const [dadosJSON, setDadosJSON] = useState([]); 
   const [dadosCSV, setDadosCSV] = useState([])
-  const [chartData, setChartData] = useState({});
+  const [chartData, setChartData] = useState({
+    labels: [],
+    datasets: [
+        {
+            label: '',
+            data: [],
+            backgroundColor: [],
+            borderColor: [],
+            borderWidth: 1,
+        },
+    ],
+});
   const navigate = useNavigate();
   let dataHora;
 
@@ -121,73 +132,94 @@ const Dashboard = () => {
 
   async function gerarGraficos() {
     const requestBody = {
-      query: `
-        query($filter: timestampInput) {
-          getEquipment24h(filter: $filter) {
-            equipmentId
-            timestamp
-            value
-          }
-        }`,
-      variables: {
-        filter: {
-          timestamp_gte: dataHora,
+        query: `
+            query($filter: timestampInput) {
+                getEquipment24h(filter: $filter) {
+                    equipmentId
+                    timestamp
+                    value
+                }
+            }`,
+        variables: {
+            filter: {
+                timestamp_gte: dataHora,
+            },
         },
-      },
     };
-  
+
     try {
-      const resposta = await fetch("http://localhost:9000/graphql", {
-        method: "POST",
-        body: JSON.stringify(requestBody),
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-  
-      if (resposta.ok) {
+        const resposta = await fetch("http://localhost:9000/graphql", {
+            method: "POST",
+            body: JSON.stringify(requestBody),
+            headers: {
+                "Content-Type": "application/json",
+            },
+        });
+
+        if (!resposta.ok) {
+            alert("Erro ao buscar dados.");
+            return;
+        }
+
         const resultado = await resposta.json();
-        console.log("Dados recebidos:", resultado); // Verifique os dados
-        const dados = resultado.data.getEquipment24h;
-  
+        console.log("Dados recebidos:", resultado);
+
+        // Certifique-se de que os dados existam
+        const dados = resultado?.data?.getEquipment24h;
+        if (!dados || dados.length === 0) {
+            console.error("Nenhum dado disponível para processar.");
+            return;
+        }
+
         // Estruturando os dados por equipamento
         const equipamentos = {};
         dados.forEach((item) => {
-          if (!equipamentos[item.equipmentId]) {
-            equipamentos[item.equipmentId] = {
-              label: item.equipmentId,
-              data: [], // Inicializa o array de dados
-              borderColor: `rgba(${Math.floor(Math.random() * 255)}, ${Math.floor(Math.random() * 255)}, ${Math.floor(Math.random() * 255)}, 1)`, // Cor aleatória para cada equipamento
-              fill: false,
-              tension: 0.1,
-            };
-          }
-          equipamentos[item.equipmentId].data.push({
-            x: new Date(item.timestamp), // Data como objeto Date
-            y: item.value,
-          });
+            if (!equipamentos[item.equipmentId]) {
+                equipamentos[item.equipmentId] = {
+                    totalValue: 0,
+                    count: 0,
+                };
+            }
+            // Acumular os valores e contar a quantidade de entradas
+            equipamentos[item.equipmentId].totalValue += item.value;
+            equipamentos[item.equipmentId].count += 1;
         });
-  
+
+        // Certifique-se de que temos equipamentos e dados válidos
+        const labels = Object.keys(equipamentos);
+        const dataValues = Object.values(equipamentos).map((stats) =>
+            (stats.totalValue / stats.count).toFixed(2)
+        );
+
+        if (labels.length === 0 || dataValues.length === 0) {
+            console.error("Erro ao processar labels ou valores.");
+            return;
+        }
+
         // Preparando os dados do gráfico
-        const datasets = Object.values(equipamentos).map((equipamento) => ({
-          label: equipamento.label,
-          data: equipamento.data, // Certifique-se de que `data` está correto
-          borderColor: equipamento.borderColor,
-          fill: false,
-          tension: 0.1,
-        }));
-  
-        console.log("Dados do gráfico:", datasets); // Verifique a estrutura dos dados do gráfico
-  
+        const datasets = [{
+            label: 'Média de Valores por Equipamento',
+            data: dataValues, // Dados com as médias
+            backgroundColor: labels.map(() =>
+                `rgba(${Math.floor(Math.random() * 255)}, ${Math.floor(Math.random() * 255)}, ${Math.floor(Math.random() * 255)}, 0.5)`
+            ), // Cores aleatórias para cada barra
+            borderColor: labels.map(() =>
+                `rgba(${Math.floor(Math.random() * 255)}, ${Math.floor(Math.random() * 255)}, ${Math.floor(Math.random() * 255)}, 1)`
+            ), // Cor da borda de cada barra
+            borderWidth: 1,
+        }];
+
+        console.log("Dados do gráfico (médias em barra):", datasets);
+
         // Atualiza o estado do gráfico
-        setChartData({ datasets });
-      } else {
-        alert("Erro ao buscar dados.");
-      }
+        setChartData({
+            labels, // IDs dos equipamentos como rótulos do eixo X
+            datasets,
+        });
     } catch (error) {
-      console.error("Erro na requisição:", error);
+        console.error("Erro na requisição:", error);
     }
-  }
+}
 
   function voltar() {
     setTimeout(() => {
@@ -216,7 +248,7 @@ const Dashboard = () => {
     <div className="ContainerTudo">
       <Sidebar onButtonClick={handleButtonClick}/>
       <div className="Container">
-      {chartData.datasets && <Line data={{ datasets: chartData.datasets }} options={{ scales: { x: { type: 'time' } } }} />}
+        <Bar data={chartData} options={{ responsive: true, scales: { y: { beginAtZero: true } } }} />
       </div>
       <div className="Botoes">
         <input type="file" accept=".csv" onChange={lerArquivoCSV} />
