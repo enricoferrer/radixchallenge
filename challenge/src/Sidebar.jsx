@@ -1,15 +1,8 @@
 import React from 'react';
-import './Sidebar.css'; // Importar estilos
+import './Sidebar.css';
 import "./Dashboard/"
 
 const Sidebar = ({onButtonClick }) => {
-  
-  
-  function voltar() {
-    setTimeout(() => {
-      navigate('/');
-    }, 500);
-  }
 
   return (
     <div className="sidebar">

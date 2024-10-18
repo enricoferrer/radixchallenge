@@ -13,7 +13,7 @@ const Login = () => {
       e.preventDefault();
       
       if (email.trim().length === 0 || password.trim().length === 0) {
-        setError('Por favor, preencha todos os campos.');
+        setError('Please fill in all the fields.');
         return;
       } 
       
@@ -40,7 +40,7 @@ const Login = () => {
             }
         });
 
-        const dado = await resposta.json(); // Processa a resposta como JSON
+        const dado = await resposta.json();
 
         if (!resposta.ok || dado.errors) {
             
@@ -50,7 +50,7 @@ const Login = () => {
 
         
         console.log('Login bem-sucedido:', dado.data.userLogin);
-        alert("Login realizado com sucesso!")
+        alert("Login successful!")
         setTimeout(() => {
           navigate('/Dashboard');
         }, 500);

@@ -24,7 +24,7 @@
 }
 
 button {
-    background-color: #c9302c; /* Cor de fundo */
+    background-color: #c9302c; 
     color: white;             
     border: none;             
     padding: 10px 20px;        
@@ -39,16 +39,16 @@ button {
 }
 
 button:hover {
-    background-color: #8f2622; /* Cor ao passar o mouse */
+    background-color: #8f2622; 
 }
 
-/* Estilo do input de arquivo */
+
 input[type="file"] {
     display: block;
     padding: 9px ;
-    background-color: #f8f8f8; /* Cor de fundo do input */
-    border: 2px solid #ccc;    /* Borda */
-    border-radius: 5px;        /* Bordas arredondadas */
+    background-color: #f8f8f8; 
+    border: 2px solid #ccc;    
+    border-radius: 5px;        
     cursor: pointer;
     font-size: 16px;
     margin-left: 2px;
@@ -56,11 +56,11 @@ input[type="file"] {
     margin-top: 175px;
 }
 
-/* Botão secundário com cor diferente */
+
 button.secondary {
-    background-color: #008CBA; /* Cor de fundo diferente */
+    background-color: #008CBA;
 }
 
 button.secondary:hover {
-    background-color: #007bb5; /* Cor ao passar o mouse */
+    background-color: #007bb5;
 }

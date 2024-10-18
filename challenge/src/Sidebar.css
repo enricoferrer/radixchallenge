@@ -14,28 +14,28 @@
 }
 
 .sidebar ul {
-  list-style-type: none; /* Remove os marcadores padrão */
-  padding: 0px; /* Remove o preenchimento padrão */
-  background-color: #e9e9e9; /* Cor de fundo da lista */
-  border-radius: 10px; /* Bordas arredondadas */
+  list-style-type: none; 
+  padding: 0px; 
+  background-color: #e9e9e9; 
+  border-radius: 10px;
 }
 
 .sidebar ul li {
-  margin: 10px 0; /* Margem entre os itens da lista */
+  margin: 10px 0; 
 }
 
 .sidebar ul li button {
-  background:#ffffff;             /* Remove o fundo padrão */
-  border: none;                 /* Remove a borda padrão */
-  padding: 50px;                /* Preenchimento interno do botão */
-  margin: auto;                    /* Remove margens */
-  font: inherit;                /* Herda a fonte do elemento pai */
-  color: #000000;                  /* Cor do texto do botão */
-  cursor: pointer;              /* Cursor de ponteiro ao passar o mouse */
-  outline:none;                /* Remove contorno quando focado */
-  display: flex;                /* Flexbox para alinhar ícones e texto */
-  width: 100%;                  /* Faz o botão ocupar toda a largura do item da lista */
-  transition: background-color 0.3s; /* Transição suave */
+  background:#ffffff;             
+  border: none;                 
+  padding: 50px;               
+  margin: auto;                
+  font: inherit;               
+  color: #000000;             
+  cursor: pointer;            
+  outline:none;             
+  display: flex;                
+  width: 100%;                 
+  transition: background-color 0.3s; 
   font-size: 17px;
   font-weight:500;
   border-radius: 10px;
@@ -43,8 +43,8 @@
 }
 
 .sidebar ul li button:hover {
-  background-color: #f0f0f0;    /* Cor de fundo ao passar o mouse */
-  border-radius: 4px;           /* Bordas arredondadas ao passar o mouse */
+  background-color: #f0f0f0; 
+  border-radius: 4px;          
 }
 
 .logout-button {

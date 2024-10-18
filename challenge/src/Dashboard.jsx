@@ -8,6 +8,7 @@ import Sidebar from './Sidebar.jsx'
 import { useNavigate } from 'react-router-dom';
 
 const Dashboard = () => {
+  // Constantes do useState (react)
   const [dadosJSON, setDadosJSON] = useState([]); 
   const [dadosCSV, setDadosCSV] = useState([])
   const [chartData, setChartData] = useState({
@@ -44,10 +45,6 @@ const Dashboard = () => {
       });
     }
   };
-
-  useEffect(() => {
-    console.log("Dados CSV atualizados:", dadosCSV);
-  }, [dadosCSV]);
 
   async function enviarCSVParaGraphQL() {
     const requestBody = {
@@ -164,14 +161,13 @@ const Dashboard = () => {
         const resultado = await resposta.json();
         console.log("Dados recebidos:", resultado);
 
-        // Certifique-se de que os dados existam
         const dados = resultado?.data?.getEquipment24h;
         if (!dados || dados.length === 0) {
             console.error("Nenhum dado disponível para processar.");
             return;
         }
 
-        // Estruturando os dados por equipamento
+        // Agrupar os dados com seus respectivos valores
         const equipamentos = {};
         dados.forEach((item) => {
             if (!equipamentos[item.equipmentId]) {
@@ -180,12 +176,12 @@ const Dashboard = () => {
                     count: 0,
                 };
             }
-            // Acumular os valores e contar a quantidade de entradas
+            
             equipamentos[item.equipmentId].totalValue += item.value;
             equipamentos[item.equipmentId].count += 1;
         });
 
-        // Certifique-se de que temos equipamentos e dados válidos
+        // Descobrir a média por sensor com base no value e na quantidade de valores que cada equipamento possui
         const labels = Object.keys(equipamentos);
         const dataValues = Object.values(equipamentos).map((stats) =>
             (stats.totalValue / stats.count).toFixed(2)
@@ -196,16 +192,16 @@ const Dashboard = () => {
             return;
         }
 
-        // Preparando os dados do gráfico
+        
         const datasets = [{
-            label: 'Média de Valores por Equipamento',
-            data: dataValues, // Dados com as médias
+            label: 'Média de Pressão por Equipamento',
+            data: dataValues, 
             backgroundColor: labels.map(() =>
                 `rgba(${Math.floor(Math.random() * 255)}, ${Math.floor(Math.random() * 255)}, ${Math.floor(Math.random() * 255)}, 0.5)`
-            ), // Cores aleatórias para cada barra
+            ), 
             borderColor: labels.map(() =>
                 `rgba(${Math.floor(Math.random() * 255)}, ${Math.floor(Math.random() * 255)}, ${Math.floor(Math.random() * 255)}, 1)`
-            ), // Cor da borda de cada barra
+            ),
             borderWidth: 1,
         }];
 
@@ -213,7 +209,7 @@ const Dashboard = () => {
 
         // Atualiza o estado do gráfico
         setChartData({
-            labels, // IDs dos equipamentos como rótulos do eixo X
+            labels, 
             datasets,
         });
     } catch (error) {
@@ -222,9 +218,10 @@ const Dashboard = () => {
 }
 
   function voltar() {
+    alert("Logging out...")
     setTimeout(() => {
       navigate('/');
-    }, 500);
+    }, 200);
   }
 
   const handleButtonClick = (tipo) => {

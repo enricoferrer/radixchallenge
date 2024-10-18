@@ -15,14 +15,19 @@ const Cadastro = () => {
       e.preventDefault();
       
       if (email.trim().length === 0 || password.trim().length === 0 || name.trim().length === 0 || confirmPassword.trim().length === 0) {
-        setError('Por favor, preencha todos os campos.');
+        setError('Please fill in all the fields.');
         return;
       } 
 
       if(password != confirmPassword){
-        setError('Senhas diferentes nos campos senha e confirmar senha')
+        setError('Passwords don´t match in the password and confirm password fields.')
         return;
       }
+
+      if (password.trim().length <= 6 ) {
+        setError('Password must be at least 6 characters long.');
+        return;
+      } 
       
       const verificarEmail = async () =>{
         const requestBody = {
@@ -50,7 +55,7 @@ const Cadastro = () => {
       const emailDuplicado = verificarEmail.value
 
       if(emailDuplicado){
-        setError('Email já cadastrado!');
+        setError('Email already registered.!');
         return;
       }
 
@@ -78,7 +83,7 @@ const Cadastro = () => {
       })
 
       if (cadastrar.ok) {
-        alert("Cadastro realizado com sucesso!")
+        alert("Registration successful!")
         setTimeout(() => {
           navigate('/');
         }, 500);
