@@ -9,20 +9,20 @@ const Sidebar = ({onButtonClick }) => {
       <h2>Menu</h2>
       <ul>
         <li>
-          <button onClick={() => onButtonClick("24horas")}>24 Horas</button>
+          <button onClick={() => onButtonClick("24horas")}>24 Hours</button>
         </li>
         <li>
-          <button onClick={() => onButtonClick("48horas")}>48 Horas</button>
+          <button onClick={() => onButtonClick("48horas")}>48 Hours</button>
         </li>
         <li>
-          <button onClick={() => onButtonClick("1semana")}>1 Semana</button>
+          <button onClick={() => onButtonClick("1semana")}>1 Week</button>
         </li>
         <li>
-          <button onClick={() => onButtonClick("1mes")}>1 Mês</button>
+          <button onClick={() => onButtonClick("1mes")}>1 Month</button>
         </li>
       </ul>
       <button className="logout-button" onClick={() => onButtonClick("voltar")}>
-        Deslogar
+        Log Out
       </button>
     </div>
   );
